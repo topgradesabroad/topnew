@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, ChevronDown, ChevronUp } from "lucide-react"; // Arrow icons for dropdown
+import { Menu, X, ChevronDown, ChevronUp, Rocket } from "lucide-react"; // Add Rocket to imports
 import PopupForm from '@/components/popupForm'; // Import the PopupForm
 
 const Header = () => {
@@ -87,22 +87,24 @@ const Header = () => {
             <Link href="/resources" className="hover:text-gray-800">Resources</Link>
           </nav>
 
-          {/* Button (Visible in desktop and mobile view) */}
+          {/* Desktop Button */}
           <button
-            className="bg-black text-white px-4 py-3 rounded-md hidden md:block"
+            className="hidden md:flex items-center gap-4 bg-black text-white px-4 py-3 rounded-md cursor-pointer" 
             onClick={togglePopup}
           >
-            Start Your Journey
+            <span>Start Your Journey</span>
+            <Rocket size={25} />
           </button>
 
           {/* Mobile Menu Button (Hamburger Icon) */}
           <div className="md:hidden flex items-center space-x-4">
-            {/* Button */}
+            {/* Mobile Button */}
             <button
-              className="bg-black text-white px-4 py-2 rounded-md order-1"
+              className="flex items-center gap-3 bg-black text-white px-4 py-2 rounded-md order-1 cursor-pointer"
               onClick={togglePopup}
             >
-              Start Your Journey
+              <span>Start Your Journey</span>
+              <Rocket size={25} />
             </button>
 
             {/* Hamburger Icon */}

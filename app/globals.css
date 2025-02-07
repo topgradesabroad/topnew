@@ -63,3 +63,18 @@ body {
   border-radius: 0.5rem; /* Adjust as needed */
   padding: 1rem; /* Adjust as needed */
   height: 100%; /* Ensure the content fills the parent */}
+
+  /* Add these rules after your existing CSS */
+button,
+[role="button"],
+a,
+select,
+summary,
+[type='submit'],
+[type='button'],
+[type='reset'],
+[type='checkbox'],
+[type='radio'],
+.cursor-pointer {
+  cursor: pointer;
+}

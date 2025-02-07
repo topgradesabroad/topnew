@@ -1,21 +1,65 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* globals.css */
+body {
+  font-family: var(--font-dm-sans), sans-serif;;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.menu-item {
+  font-family: var(--font-dm-sans);
+  color: black;
+}
+
+.menu-item:hover {
+  color: #4A4A4A; /* Gray-800 on hover */
+}
+
+/* Dropdown Layout for Courses */
+.courses-dropdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Adjust as per your need */
+}
+
+.courses-dropdown ul {
+  list-style: none;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .header-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .menu-items {
+    display: block; /* Ensure menu items stack vertically */
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@media (max-width: 768px) {
+  .mobile-menu {
+    display: block; /* Make mobile menu visible */
+  }
+
+  /* Modify dropdown behavior for mobile */
+  .mobile-menu button {
+    width: 100%;
+    text-align: left;
+  }
 }
+
+
+
+.gradient-border {
+  position: relative;
+  padding: 2px; /* Adjust as needed */
+  background: linear-gradient(90deg, #000000, #800080); /* Example gradient */
+  border-radius: 0.5rem; /* Adjust as needed */
+}
+
+.gradient-border > .content {
+  background: white;
+  border-radius: 0.5rem; /* Adjust as needed */
+  padding: 1rem; /* Adjust as needed */
+  height: 100%; /* Ensure the content fills the parent */}

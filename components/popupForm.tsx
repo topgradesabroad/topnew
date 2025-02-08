@@ -71,7 +71,7 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-300 bg-opacity-50 z-10">
       <div className="bg-white rounded-2xl shadow-lg w-full md:w-[800px] max-w-[90%] md:max-w-none flex flex-col md:flex-row relative">
         {/* Left Side - Image (optional) */}
         <div className="w-full md:w-1/2 relative">

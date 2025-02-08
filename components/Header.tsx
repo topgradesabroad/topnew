@@ -89,7 +89,9 @@ const Header = () => {
 
           {/* Desktop Button */}
           <button
-            className="hidden md:flex items-center gap-4 bg-black text-white px-4 py-3 rounded-md cursor-pointer" 
+            className="hidden md:flex items-center gap-4 px-4 py-3 rounded-md cursor-pointer
+              bg-black hover:bg-gray-800
+              text-white shadow-lg hover:shadow-xl transition-all duration-200" 
             onClick={togglePopup}
           >
             <span>Start Your Journey</span>
@@ -100,7 +102,9 @@ const Header = () => {
           <div className="md:hidden flex items-center space-x-4">
             {/* Mobile Button */}
             <button
-              className="flex items-center gap-3 bg-black text-white px-4 py-2 rounded-md order-1 cursor-pointer"
+              className="flex items-center gap-3 px-4 py-2 rounded-md order-1 cursor-pointer
+                bg-black hover:bg-gray-800
+                text-white shadow-lg hover:shadow-xl transition-all duration-200"
               onClick={togglePopup}
             >
               <span>Start Your Journey</span>

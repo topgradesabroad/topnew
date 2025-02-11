@@ -1,228 +1,231 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
 
-type UniversityData = {
-  [key: string]: {
-    'Ivy League'?: string[];
-    'A+ Universities'?: string[];
-  } | string[];
+const universities = {
+  ivy: [
+    "Harvard University",
+    "Yale University",
+    "Princeton University",
+    "Columbia University",
+    "University of Pennsylvania (UPenn)",
+    "Dartmouth College",
+    "Brown University",
+    "Cornell University"
+  ],
+  aplus: {
+    "USA": [
+      "MIT", "Stanford", "Caltech", "University of Chicago", 
+      "Johns Hopkins", "Northwestern", "Duke", "UC Berkeley", "UCLA"
+    ],
+    "UK": [
+      "University of Oxford", "University of Cambridge", 
+      "LSE", "Imperial College London"
+    ],
+    "Canada": [
+      "University of Toronto", "McGill University", "UBC"
+    ],
+    "Europe": [
+      "ETH Zurich", "HEC Paris", 
+      "Bocconi University", "Technical University of Munich"
+    ],
+    "Asia & Australia": [
+      "National University of Singapore", 
+      "Tsinghua University", 
+      "University of Melbourne"
+    ]
+  }
 };
 
-const IvyLeagueForm = () => {
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+const otherCountries = [
+  "USA", "UK", "Canada", "Australia",
+  "New Zealand", "Germany", "France",
+  "Ireland", "Dubai", "Singapore",
+  "Spain", "Hungary", "Italy"
+];
+
+export default function IvyLeagueForm() {
+  const [country, setCountry] = useState('');
+  const [universityType, setUniversityType] = useState('');
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: ''
-  });
 
-  const universities: UniversityData = {
-    'USA': {
-      'Ivy League': [
-        'Harvard University',
-        'Yale University',
-        'Princeton University',
-        'Columbia University',
-        'University of Pennsylvania',
-        'Dartmouth College',
-        'Brown University',
-        'Cornell University'
-      ],
-      'A+ Universities': [
-        'Massachusetts Institute of Technology (MIT)',
-        'Stanford University',
-        'California Institute of Technology (Caltech)',
-        'University of Chicago',
-        'Johns Hopkins University',
-        'Northwestern University',
-        'Duke University',
-        'University of California, Berkeley',
-        'University of California, Los Angeles'
-      ]
-    },
-    'UK': [
-      'University of Oxford',
-      'University of Cambridge',
-      'London School of Economics and Political Science',
-      'Imperial College London'
-    ],
-    'Canada': [
-      'University of Toronto',
-      'McGill University',
-      'University of British Columbia'
-    ],
-    'Europe': [
-      'ETH Zurich',
-      'HEC Paris',
-      'Bocconi University',
-      'Technical University of Munich'
-    ],
-    'Asia & Australia': [
-      'National University of Singapore',
-      'Tsinghua University',
-      'University of Melbourne'
-    ]
+  useEffect(() => {
+    if (country !== 'USA') setUniversityType('');
+    setSelectedUniversities([]);
+    setSelectedCountries([]);
+  }, [country]);
+
+  const handleUniversitySelect = (uni: string) => {
+    setSelectedUniversities(prev => 
+      prev.includes(uni) ? prev.filter(u => u !== uni) : [...prev, uni]
+    );
   };
 
-  const handleUniversitySelection = (university: string) => {
-    const maxSelection = selectedCategory === 'Ivy League' ? 3 : 5;
-    
-    if (selectedUniversities.includes(university)) {
-      setSelectedUniversities(selectedUniversities.filter(u => u !== university));
-    } else if (selectedUniversities.length < maxSelection) {
-      setSelectedUniversities([...selectedUniversities, university]);
+  const handleCountrySelect = (countryName: string) => {
+    setSelectedCountries(prev => 
+      prev.includes(countryName) 
+        ? prev.filter(c => c !== countryName) 
+        : [...prev, countryName]
+    );
+  };
+
+  // Get universities based on current selection
+  const getUniversities = () => {
+    if (country === 'USA') {
+      return universityType === 'ivy' 
+        ? universities.ivy 
+        : universities.aplus.USA;
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log({ ...formData, selectedCountry, selectedCategory, selectedUniversities });
-  };
-
-  const getUniversityList = () => {
-    if (selectedCountry === 'USA') {
-      return selectedCategory ? (universities[selectedCountry] as any)[selectedCategory] : [];
-    }
-    return universities[selectedCountry] as string[] || [];
+    return universities.aplus[country as keyof typeof universities.aplus] || [];
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 py-16">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Are you looking for assistance with your Ivy League & Other A+ Universities?
+    <section className="bg-white py-12 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold text-gray-900 mb-3">
+            Guidance for <span className="text-blue-600">Ivy League</span> & 
+            <span className="text-indigo-600"> Global Universities</span>
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg md:text-md text-purple-600 mx-auto leading-tight">
             Get in touch with us for one-to-one personalized consultation to help you achieve your academic goals at world-leading institutions.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 items-start">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid lg:grid-cols-2 gap-8 items-stretch">
+          {/* Form Section */}
+          <div className="bg-yellow-50 rounded-xl p-6 shadow-lg h-full">
+            <form className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Full Name
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Target Country
                 </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Select Region
-                </label>
-                <select
-                  value={selectedCountry}
-                  onChange={(e) => {
-                    setSelectedCountry(e.target.value);
-                    setSelectedCategory('');
-                    setSelectedUniversities([]);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                <select 
+                  className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                 >
-                  <option value="">Choose your target region</option>
-                  {Object.keys(universities).map(country => (
-                    <option key={country} value={country}>{country}</option>
-                  ))}
+                  <option value="">Choose Country</option>
+                  <option>USA</option>
+                  <option>UK</option>
+                  <option>Canada</option>
+                  <option>Europe</option>
+                  <option>Asia & Australia</option>
+                  <option value="other">I am good with other global universities</option>
                 </select>
               </div>
 
-              {selectedCountry === 'USA' && (
+              {country === 'other' ? (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Countries of Interest
                   </label>
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => {
-                      setSelectedCategory(e.target.value);
-                      setSelectedUniversities([]);
-                    }}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="">Select university category</option>
-                    <option value="Ivy League">Ivy League Universities</option>
-                    <option value="A+ Universities">A+ Universities</option>
-                  </select>
-                </div>
-              )}
-
-              {((selectedCountry === 'USA' && selectedCategory) || (selectedCountry && selectedCountry !== 'USA')) && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Select Universities 
-                    {selectedCategory === 'Ivy League' ? ' (Max 3)' : ' (Max 5)'}
-                  </label>
-                  <div className="mt-2 space-y-2">
-                    {getUniversityList().map((university: string) => (
-                      <div key={university} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={university}
-                          checked={selectedUniversities.includes(university)}
-                          onChange={() => handleUniversitySelection(university)}
-                          className="mr-2"
-                        />
-                        <label htmlFor={university} className="text-sm">
-                          {university}
-                        </label>
-                      </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {otherCountries.map((countryName) => (
+                      <button
+                        type="button"
+                        key={countryName}
+                        onClick={() => handleCountrySelect(countryName)}
+                        className={`p-2 text-sm rounded-lg border ${
+                          selectedCountries.includes(countryName)
+                            ? 'bg-blue-100 border-blue-500'
+                            : 'hover:bg-gray-50 border-gray-200'
+                        }`}
+                      >
+                        {countryName}
+                      </button>
                     ))}
                   </div>
                 </div>
+              ) : (
+                <>
+                  {country === 'USA' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        University Category
+                      </label>
+                      <select
+                        className="w-full px-4 py-3 rounded-lg border focus:ring-2 focus:ring-blue-500"
+                        value={universityType}
+                        onChange={(e) => setUniversityType(e.target.value)}
+                      >
+                        <option value="">Select Category</option>
+                        <option value="ivy">Ivy League Universities</option>
+                        <option value="aplus">Other A+ Universities</option>
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Updated university display logic */}
+                  {(country && (country === 'USA' ? universityType : true)) && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Select Universities
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {getUniversities()?.map((uni) => (
+                          <button
+                            type="button"
+                            key={uni}
+                            onClick={() => handleUniversitySelect(uni)}
+                            className={`p-2 text-sm rounded-lg border ${
+                              selectedUniversities.includes(uni)
+                                ? 'bg-blue-100 border-blue-500'
+                                : 'hover:bg-gray-50 border-gray-200'
+                            }`}
+                          >
+                            {uni}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
               )}
 
-              <button 
-                type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
-              >
-                Request Consultation
-              </button>
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 hover:from-blue-700 hover:via-blue-600 hover:to-blue-500
+                    shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-600/20
+                    transform hover:-translate-y-0.5 transition-all duration-200 text-white py-3 px-6 rounded-lg font-Medium"
+                >
+                  Get Personalized Roadmap
+                </button>
+              </div>
             </form>
           </div>
 
-          <div className="relative h-full">
-            <div className="sticky top-6 space-y-6">
-              <img
-                src="/university.jpg"
-                alt="University campus"
-                className="rounded-lg shadow-lg w-full object-cover"
-              />
+          {/* University Image Section */}
+          <div className="relative h-full rounded-xl overflow-hidden shadow-lg">
+            <img
+              src="/university.jpg"
+              alt="Global Universities"
+              className="w-full h-full object-cover absolute inset-0"
+            />
+            
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 p-6">
+              <div className="flex flex-wrap gap-3 justify-center">
+                {['Oxford', 'Toronto', 'ETH Zurich', 'NUS', 'Sorbonne', 'Munich'].map((uni) => (
+                  <span
+                    key={uni}
+                    className="px-3 py-1.5 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-gray-800"
+                  >
+                    {uni}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow">
+              <p className="text-sm font-semibold text-gray-800">
+                <span className="text-blue-600">900+</span> Universities
+                <span className="block text-xs font-normal text-gray-600">Across 12+ Countries</span>
+              </p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default IvyLeagueForm;
+}

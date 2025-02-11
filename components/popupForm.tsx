@@ -26,14 +26,18 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
     educationLevel: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     let formErrors = { ...errors };
+    
 
     // Validate email
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zAZ0-9.-]+\.[a-zAZ0-9]{2,}$/;
@@ -65,10 +69,41 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
 
     // If no errors, form is ready for submission
     if (!Object.values(formErrors).some((err) => err)) {
-      alert('Form submitted successfully!');
-      // Handle form submission logic here
+      try {
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert('Form submitted successfully! We will contact you shortly.');
+          onClose(); // Close the popup
+          setFormData({
+            fullName: '',
+            email: '',
+            mobile: '',
+            country: '',
+            course: '',
+            educationLevel: ''
+          });
+        } else {
+          alert(`Submission failed: ${result.error || 'Please try again.'}`);
+        }
+      } catch (error) {
+        alert('An error occurred. Please try again later.');
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-300 bg-opacity-50 z-10">
@@ -178,11 +213,12 @@ const PopupForm: React.FC<PopupFormProps> = ({ onClose }) => {
             {errors.educationLevel && <p className="text-red-500 text-sm">{errors.educationLevel}</p>}
 
             <button
-              type="submit"
-              className="w-full bg-black text-white py-2 rounded-md"
-            >
-              Submit
-            </button>
+    type="submit"
+    className="w-full bg-black text-white py-2 rounded-md disabled:bg-gray-400"
+    disabled={isSubmitting}
+  >
+    {isSubmitting ? 'Submitting...' : 'Submit'}
+  </button>
           </form>
         </div>
       </div>

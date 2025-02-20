@@ -1,3 +1,4 @@
+// app/api/send-email/route.ts
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
@@ -7,31 +8,52 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     
+    // Validate all required fields
+    if (!body.name || !body.email || !body.phone || !body.country || !body.course) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          message: 'Please fill in all required fields' 
+        },
+        { status: 400 }
+      );
+    }
+
     const { data, error } = await resend.emails.send({
-      from: 'apply@topgradesabroad.com', // Use your verified domain
-      to: [process.env.YOUR_EMAIL_ADDRESS!], // Your email address
-      subject: 'New Student Inquiry',
+      from: 'apply@mail.topgradesabroad.com',
+      to: [process.env.YOUR_EMAIL_ADDRESS!],
+      subject: 'New Study Abroad Application',
       html: `
-        <h3>New Student Details</h3>
-        <p><strong>Full Name:</strong> ${body.fullName}</p>
+        <h2>New Study Abroad Application</h2>
+        <p><strong>Name:</strong> ${body.name}</p>
         <p><strong>Email:</strong> ${body.email}</p>
-        <p><strong>Mobile:</strong> ${body.mobile}</p>
+        <p><strong>Phone:</strong> ${body.phone}</p>
         <p><strong>Preferred Country:</strong> ${body.country}</p>
-        <p><strong>Preferred Course:</strong> ${body.course}</p>
-        <p><strong>Education Level:</strong> ${body.educationLevel}</p>
-      `
+        <p><strong>Course Interest:</strong> ${body.course}</p>
+      `,
     });
 
     if (error) {
-      return NextResponse.json({ success: false, error: error.message });
+      console.error('Resend API error:', error);
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Failed to send application. Please try again.' 
+      }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ 
+      success: true,
+      message: "Thank you for your application! We'll be in touch soon."
+    });
 
   } catch (error) {
-    return NextResponse.json({ 
-      success: false, 
-      error: 'Failed to send email. Please try again later.' 
-    });
+    console.error('Server error:', error);
+    return NextResponse.json(
+      { 
+        success: false, 
+        message: 'Something went wrong. Please try again later.' 
+      },
+      { status: 500 }
+    );
   }
 }

@@ -5,9 +5,9 @@ import Image from 'next/image'
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen md:min-h-[87vh] flex flex-col md:flex-row">
+    <section className="relative min-h-screen md:min-h-[90vh] flex flex-col md:flex-row">
       {/* Background gradient - only visible on desktop */}
-      <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-rose-50 via-pink-100 via-blue-50 to-purple-300 z-0" />
+      <div className="hidden md:block absolute inset-0 bg-gradient-to-b from-indigo-50 to-purple-200 z-0" />
 
       {/* Left Column - Content */}
       <div className="md:w-1/2 p-6 md:p-8 lg:p-12 flex flex-col justify-center order-2 md:order-1 bg-white md:bg-transparent relative z-1">
@@ -34,7 +34,7 @@ export default function HeroSection() {
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 pb-6 md:pb-0">
             <button className="group px-6 py-3 md:px-8 md:py-4 text-base font-medium text-white rounded-xl
-              bg-gradient-to-r from-blue-600 via-blue-500 to-blue-400 hover:from-blue-700 hover:via-blue-600 hover:to-blue-500
+              bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700
               shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-600/20
               transform hover:-translate-y-0.5 transition-all duration-200 
               flex items-center justify-center gap-3">
@@ -44,7 +44,7 @@ export default function HeroSection() {
             </button>
 
             <button className="group px-6 py-3 md:px-8 md:py-4 text-base font-medium text-white rounded-xl
-              bg-gradient-to-r from-green-600 via-green-500 to-teal-400 hover:from-green-700 hover:via-green-600 hover:to-teal-500
+              bg-gradient-to-r from-amber-500 to-pink-500 hover:from-amber-600 hover:to-pink-600
               shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-600/20
               transform hover:-translate-y-0.5 transition-all duration-200
               flex items-center justify-center gap-3">

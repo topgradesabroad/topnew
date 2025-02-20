@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      navy: {
+        800: '#1A365D',
+        900: '#0F2342',
+      },
       
     },
   },
